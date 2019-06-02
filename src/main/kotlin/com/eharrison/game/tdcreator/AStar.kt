@@ -7,8 +7,6 @@ import java.util.ArrayList
 
 
 
-
-
 const val WIDTH = 20
 const val HEIGHT = 20
 const val EMPTY = '.'
@@ -78,26 +76,6 @@ fun main(args: Array<String>) {
 //    readLine()
 }
 
-
-
-fun getNeighbors(current: Node): List<Node> {
-    val neighbors = mutableListOf<Node>()
-    for (y in -1..1) {
-        for (x in -1..1) {
-            if (x == 0 && y == 0) continue
-            val neighbor = Node(current.x + x, current.y + y).apply { parent = current }
-            neighbors.add(neighbor)
-        }
-    }
-    return neighbors
-}
-
-private val blocked: (String) -> (Node) -> Boolean = { map -> { node -> map[index(node.x, node.y)] == SOLID }}
-
-private fun distance(node0: Node, node1: Node): Double {
-    return if (node0.x != node1.x && node0.y != node1.y) 3.0 else 1.0
-}
-
 private fun index(x: Int, y: Int) = y * WIDTH + x
 
 private fun find(map: String, c: Char): Node {
@@ -109,11 +87,30 @@ private fun find(map: String, c: Char): Node {
     return Node(-1, -1)
 }
 
-data class Node(val x: Int, val y: Int) {
-    var parent: Node? = null
+
+
+fun getNeighbors(current: Node): List<Node> {
+    val neighbors = mutableListOf<Node>()
+    for (y in -1..1) {
+        for (x in -1..1) {
+            if (x == 0 && y == 0) continue
+            val neighbor = Node(current.x + x, current.y + y)
+            neighbors.add(neighbor)
+        }
+    }
+    return neighbors
 }
 
+private fun distance(node0: Node, node1: Node): Double {
+    return if (node0.x != node1.x && node0.y != node1.y) Math.sqrt(2.0) else 1.0
+}
 
+private val blocked: (String) -> (Node) -> Boolean = { map -> { node -> map[index(node.x, node.y)] == SOLID }}
+
+data class Node(
+    val x: Int,
+    val y: Int
+)
 
 fun euclidean(node0: Node, node1: Node): Double {
     val x = node1.x - node0.x
@@ -191,7 +188,6 @@ private fun <N> reconstructPath(
         val previous = current
         current = cameFrom[current]
         if (current != null) {
-//            val edge = current!!.getEdge(previous)
             totalPath.add(previous)
         }
     }
