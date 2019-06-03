@@ -102,7 +102,8 @@ fun getNeighbors(current: Node): List<Node> {
 }
 
 private fun distance(node0: Node, node1: Node): Double {
-    return if (node0.x != node1.x && node0.y != node1.y) Math.sqrt(2.0) else 1.0
+//    return if (node0.x != node1.x && node0.y != node1.y) Math.sqrt(2.0) else 1.0
+    return if (node0.x != node1.x && node0.y != node1.y) 1.0 else 1.0
 }
 
 private val blocked: (String) -> (Node) -> Boolean = { map -> { node -> map[index(node.x, node.y)] == SOLID }}
@@ -124,9 +125,19 @@ fun manhattan(node0: Node, node1: Node): Double {
 
 
 
-typealias Heuristic<T> = (T, T) -> Double
+typealias GetNeighbors<N> = (N) -> List<N>
+typealias Distance<N> = (N, N) -> Double
+typealias Exclude<N> = (N) -> Boolean
+typealias Heuristic<N> = (N, N) -> Double
 
-fun <N> aStar(start: N, goal: N, neighbors: (N) -> List<N>, distance: (N, N) -> Double, blocked: (N) -> Boolean, heuristic: Heuristic<N>): List<N> {
+fun <N> aStar(
+    start: N,
+    goal: N,
+    neighbors: GetNeighbors<N>,
+    distance: Distance<N>,
+    blocked: Exclude<N>,
+    heuristic: Heuristic<N>
+): List<N> {
     val closedSet = mutableSetOf<N>() // The set of nodes already evaluated.
     val openSet = mutableListOf(start) // The set of tentative nodes to be evaluated, initially containing the start node
     val cameFrom = mutableMapOf<N, N>() // The map of navigated nodes.
