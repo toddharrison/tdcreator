@@ -80,7 +80,7 @@ private fun find(map: String, c: Char): Node {
 
 
 
-fun getNeighbors(current: Node): List<Node> {
+private fun getNeighbors(current: Node): List<Node> {
     val neighbors = mutableListOf<Node>()
     for (y in -1..1) {
         for (x in -1..1) {
@@ -93,23 +93,20 @@ fun getNeighbors(current: Node): List<Node> {
 }
 
 private fun distance(node0: Node, node1: Node): Double {
-//    return if (node0.x != node1.x && node0.y != node1.y) Math.sqrt(2.0) else 1.0
     return if (node0.x != node1.x && node0.y != node1.y) Math.sqrt(2.0) else 1.0
 }
 
 private val blocked: (String) -> (Node) -> Boolean = { map -> { node -> map[index(node.x, node.y)] == SOLID }}
 
-data class Node(
+private data class Node(
     val x: Int,
     val y: Int
 )
 
-
-
-val euclidean: (Node, Node) -> Double = { node0, node1 ->
+private val euclidean: (Node, Node) -> Double = { node0, node1 ->
     val x = node1.x - node0.x
     val y = node1.y - node0.y
     Math.sqrt((x * x + y * y).toDouble())
 }
 
-val manhattan: (Node, Node) -> Double = { node0, node1 -> (Math.abs(node1.x - node0.x) + Math.abs(node1.y - node0.y)).toDouble() }
+private val manhattan: (Node, Node) -> Double = { node0, node1 -> (Math.abs(node1.x - node0.x) + Math.abs(node1.y - node0.y)).toDouble() }

@@ -3,18 +3,18 @@ package com.eharrison.game.tdcreator
 import java.util.PriorityQueue
 import java.util.ArrayList
 
-typealias GetNeighbors<N> = (N) -> List<N>
-typealias Distance<N> = (N, N) -> Double
+typealias Neighbors<N> = (N) -> List<N>
+typealias Cost<N> = (N, N) -> Double
 typealias Exclude<N> = (N) -> Boolean
 typealias Heuristic<N> = (N, N) -> Double
 
 fun <N> aStar(
     start: N,
     goal: N,
-    neighbors: GetNeighbors<N>,
-    distance: Distance<N> = { _, _ -> 1.0 },
-    blocked: Exclude<N> = { _ -> false },
-    heuristic: Heuristic<N> = { _, _ -> 0.0 } // Dijkstra's algorithm
+    neighbors: Neighbors<N>,
+    cost: Cost<N> = { _, _ -> 1.0 },
+    exclude: Exclude<N> = { _ -> false },
+    heuristic: Heuristic<N> = { _, _ -> 0.0 } // Dijkstra's algorithm, only for positive costs
 ): List<N> {
     val closedSet = mutableSetOf<N>() // The set of nodes already evaluated.
     val cameFrom = mutableMapOf<N, N>() // The map of navigated nodes.
@@ -44,11 +44,11 @@ fun <N> aStar(
 
         closedSet.add(current)
         for (neighbor in neighbors(current)) {
-            if (closedSet.contains(neighbor) || blocked(neighbor)) {
+            if (closedSet.contains(neighbor) || exclude(neighbor)) {
                 continue // Ignore the neighbor which is already evaluated or shouldn't be.
             }
 
-            val tentativeGScore = gScore[current]!! + distance(current, neighbor) // Length of this path.
+            val tentativeGScore = gScore[current]!! + cost(current, neighbor) // Cost of this path.
             if (!openSet.contains(neighbor)) {
                 openSet.add(neighbor) // Discovered a new node
             }
