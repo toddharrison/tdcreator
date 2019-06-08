@@ -26,7 +26,6 @@ fun addTower(game: Game, tower: Tower): Boolean {
             getTowersAt(game, tower.x, tower.y, tower.z, tower.x + tower.sizeX - 1, tower.y + tower.sizeY - 1, tower.z + tower.sizeZ - 1).isEmpty()
         ) {
             game.towers.add(tower)
-            true
         } else false
     } else false
 }

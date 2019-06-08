@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class DataTest {
-    val game = Game(10, 10,2)
+    val game = Game(10, 10,10)
 
     @Nested
     inner class TestGetTowersAt {
@@ -53,7 +53,9 @@ class DataTest {
             assertTrue(addTower(game, Tower(4,4)))
             assertTrue(addTower(game, Tower(9,9)))
 
-            assertEquals(3, game.towers.size)
+            assertTrue(addTower(game, Tower(4,4,8,2,2,2)))
+
+            assertEquals(4, game.towers.size)
         }
 
         @Test
@@ -61,6 +63,8 @@ class DataTest {
             assertFalse(addTower(game, Tower(9,9, sizeX=2, sizeY=2)))
             assertFalse(addTower(game, Tower(0,9, sizeX=2, sizeY=2)))
             assertFalse(addTower(game, Tower(9,0, sizeX=2, sizeY=2)))
+
+            assertFalse(addTower(game, Tower(4,4,9,2,2,2)))
 
             assertTrue(game.towers.isEmpty())
         }
@@ -81,6 +85,20 @@ class DataTest {
 
             assertTrue(addTower(game, Tower(4,4,1)))
             assertEquals(2, game.towers.size)
+
+            assertFalse(addTower(game, Tower(4,4,1)))
+            assertEquals(2, game.towers.size)
+        }
+
+        @Test
+        fun `try to add overlapping large towers`() {
+            assertTrue(addTower(game, Tower(4,4,0,2,2,2)))
+            assertFalse(addTower(game, Tower(4,4,1,2,2,2)))
+            assertTrue(addTower(game, Tower(4,4,2,2,2,2)))
+            assertFalse(addTower(game, Tower(4,4,3,2,2,2)))
+            assertTrue(addTower(game, Tower(4,4,4,2,2,2)))
+            assertFalse(addTower(game, Tower(4,4,5,2,2,2)))
+            assertTrue(addTower(game, Tower(4,4,6,2,2,2)))
         }
     }
 }
