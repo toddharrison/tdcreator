@@ -44,3 +44,22 @@ fun getTowersAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int
         && it.z <= maxZ && it.z + it.sizeZ - 1 >= minZ
     }
 }
+
+fun render(game: Game): String {
+    val sb = StringBuilder()
+    for (z in 0 until game.sizeZ) {
+        sb.append("Layer $z:\n")
+        for (y in 0 until game.sizeY) {
+            for (x in 0 until game.sizeX) {
+                if (getTowersAt(game, x, y, z).isEmpty()) {
+                    sb.append(".")
+                } else {
+                    sb.append("#")
+                }
+            }
+            sb.append("\n")
+        }
+        sb.append("\n")
+    }
+    return sb.toString()
+}
