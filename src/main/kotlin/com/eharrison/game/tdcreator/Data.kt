@@ -52,9 +52,9 @@ fun render(game: Game): String {
         for (y in 0 until game.sizeY) {
             for (x in 0 until game.sizeX) {
                 if (getTowersAt(game, x, y, z).isEmpty()) {
-                    sb.append(".")
+                    sb.append(" .")
                 } else {
-                    sb.append("#")
+                    sb.append(" #")
                 }
             }
             sb.append("\n")
