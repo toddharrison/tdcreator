@@ -30,6 +30,10 @@ fun addTower(game: Game, tower: Tower): Boolean {
     } else false
 }
 
+fun removeTower(game: Game, tower: Tower): Boolean {
+    return game.towers.remove(tower)
+}
+
 fun getTowersAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int = y1, z2: Int = z1): List<Tower> {
     val minX = Math.min(x1, x2)
     val maxX = Math.max(x1, x2)
