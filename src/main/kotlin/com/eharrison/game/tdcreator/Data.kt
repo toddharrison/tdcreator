@@ -30,6 +30,10 @@ fun addTower(game: Game, tower: Tower): Boolean {
     } else false
 }
 
+fun removeTower(game: Game, tower: Tower): Boolean {
+    return game.towers.remove(tower)
+}
+
 fun getTowersAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int = y1, z2: Int = z1): List<Tower> {
     val minX = Math.min(x1, x2)
     val maxX = Math.max(x1, x2)
@@ -43,4 +47,23 @@ fun getTowersAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int
         && it.y <= maxY && it.y + it.sizeY - 1 >= minY
         && it.z <= maxZ && it.z + it.sizeZ - 1 >= minZ
     }
+}
+
+fun render(game: Game): String {
+    val sb = StringBuilder()
+    for (z in 0 until game.sizeZ) {
+        sb.append("Layer $z:\n")
+        for (y in 0 until game.sizeY) {
+            for (x in 0 until game.sizeX) {
+                if (getTowersAt(game, x, y, z).isEmpty()) {
+                    sb.append(" .")
+                } else {
+                    sb.append(" #")
+                }
+            }
+            sb.append("\n")
+        }
+        sb.append("\n")
+    }
+    return sb.toString()
 }

@@ -101,4 +101,17 @@ class DataTest {
             assertTrue(addTower(game, Tower(4,4,6,2,2,2)))
         }
     }
+
+    @Nested
+    inner class TestRender {
+        @Test
+        fun `render all layer`() {
+            val game = Game(10,10,3)
+
+            addTower(game, Tower(1,8))
+            addTower(game, Tower(4,4,0,2,2,2))
+
+            println(render(game))
+        }
+    }
 }
