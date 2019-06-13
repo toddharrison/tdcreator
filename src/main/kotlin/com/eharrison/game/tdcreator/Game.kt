@@ -2,7 +2,7 @@ package com.eharrison.game.tdcreator
 
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
-import kotlin.math.roundToInt
+import kotlin.system.measureNanoTime
 
 private val running = AtomicBoolean(true)
 private val paused = AtomicBoolean(false)
@@ -30,7 +30,7 @@ fun main() {
     var count = 0
     loop(running::get, paused::get, dst, drt, mit, startingState, ::input, ::integrate, ::interpolate) {
         println(render(game))
-        if (count++ == 10) {
+        if (count++ == 11) {
             currentInput.set(Input(paused = false, shutdown = true))
         }
     }
@@ -43,7 +43,8 @@ data class Input(
 
 data class Node(
     val x: Int = 0,
-    val y: Int = 0
+    val y: Int = 0,
+    val z: Int = 0
 )
 
 private fun input(): Input {
@@ -53,23 +54,26 @@ private fun input(): Input {
 private fun integrate(input: Input, state: Game, t: Double, dt: Double): Game {
     if (input.shutdown) running.set(false)
 
-    for (creep in state.creeps) {
-        val start = Node(creep.x.minus(0.5).roundToInt(), creep.y.minus(0.5).roundToInt())
-        val end = Node(9,9)
+    val ns = measureNanoTime {
+        for (creep in state.creeps) {
+            val start = Node(creep.x.minus(0.5).toInt(), creep.y.minus(0.5).toInt(), creep.z.toInt())
+            val end = Node(9, 9, creep.z.toInt())
 
-        val path = aStar(start, end, ::getNeighbors, ::distance, blocked, euclidean)
-        if (path.size > 0) {
-            when {
-                creep.x < path[0].x + 0.5 -> creep.x = Math.min(path[0].x + 0.5, creep.x + (1 * dt))
-                creep.x > path[0].x + 0.5 -> creep.x = Math.max(path[0].x + 0.5, creep.x - (1 * dt))
+            val path = aStar(start, end, ::getNeighbors, ::distance, blocked, euclidean)
+            if (path.isNotEmpty()) {
+                when {
+                    creep.x < path[0].x + 0.5 -> creep.x = Math.min(path[0].x + 0.5, creep.x + (1 * dt))
+                    creep.x > path[0].x + 0.5 -> creep.x = Math.max(path[0].x + 0.5, creep.x - (1 * dt))
+                }
+                when {
+                    creep.y < path[0].y + 0.5 -> creep.y = Math.min(path[0].y + 0.5, creep.y + (1 * dt))
+                    creep.y > path[0].y + 0.5 -> creep.y = Math.max(path[0].y + 0.5, creep.y - (1 * dt))
+                }
+//            println("${creep.x} : ${creep.y} : ${creep.z}")
             }
-            when {
-                creep.y < path[0].y + 0.5 -> creep.y = Math.min(path[0].y + 0.5, creep.y + (1 * dt))
-                creep.y > path[0].y + 0.5 -> creep.y = Math.max(path[0].y + 0.5, creep.y - (1 * dt))
-            }
-//            println("${creep.x} : ${creep.y}")
         }
     }
+//    println("integrate took ${ns / 1000000L} milliseconds")
 
     return state
 }
@@ -89,9 +93,9 @@ private fun getNeighbors(node: Node): List<Node> {
             if (
                 nodeX in 0 until game.sizeX
                 && nodeY in 0 until game.sizeY
-                && getTowersAt(game, nodeX, nodeY).isEmpty()
+                && getTowersAt(game, nodeX, nodeY, node.z).isEmpty()
             ) {
-                val neighbor = Node(nodeX, nodeY)
+                val neighbor = Node(nodeX, nodeY, node.z)
                 neighbors.add(neighbor)
             }
         }
