@@ -4,7 +4,8 @@ data class Game(
     val sizeX: Int,
     val sizeY: Int,
     val sizeZ: Int = 1,
-    val towers: MutableList<Tower> = mutableListOf()
+    val towers: MutableList<Tower> = mutableListOf(),
+    val creeps: MutableList<Creep> = mutableListOf()
 )
 
 data class Tower(
@@ -14,6 +15,13 @@ data class Tower(
     val sizeX: Int = 1,
     val sizeY: Int = 1,
     val sizeZ: Int = 1
+)
+
+data class Creep(
+    val x: Double,
+    val y: Double,
+    val z: Double = 0.0
+    //val Health: Int = 10
 )
 
 fun addTower(game: Game, tower: Tower): Boolean {
@@ -27,6 +35,16 @@ fun addTower(game: Game, tower: Tower): Boolean {
         ) {
             game.towers.add(tower)
         } else false
+    } else false
+}
+
+fun addCreep(game:Game, creep: Creep): Boolean {
+    val intX = creep.x.toInt()
+    val intY = creep.y.toInt()
+    val intZ = creep.z.toInt()
+    return if (getTowersAt(game, intX,intY,intZ).isEmpty() && intX in 0 until game.sizeX
+        && intY in 0 until game.sizeY && intZ in 0 until game.sizeZ) {
+        game.creeps.add(creep)
     } else false
 }
 
