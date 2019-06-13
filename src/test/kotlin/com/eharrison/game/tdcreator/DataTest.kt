@@ -8,6 +8,49 @@ class DataTest {
     val game = Game(10, 10,10)
 
     @Nested
+    inner class TestAddCreep {
+        @Test
+        fun `Try to spawn a creep on a tower`() {
+            val creep = Creep(1.5,1.2)
+            val tower = Tower(1,1)
+            addTower(game,tower)
+            assertFalse(addCreep(game,creep))
+            assertEquals(0,game.creeps.size)
+        }
+
+        @Test
+        fun `Spawn a creep normally`() {
+            val creep = Creep(4.3,2.9)
+            assertTrue(addCreep(game,creep))
+            assertEquals(1,game.creeps.size)
+        }
+
+        @Test
+        fun `Try to Spawn a creep outside of the map`(){
+            val creep1 = Creep(-2.3,3.4)
+            val creep2 = Creep(1.3,-3.4)
+            val creep3 = Creep(11.3,3.4)
+            val creep4 = Creep(1.3,13.4)
+            val creep5 = Creep(1.3,3.4,13.3)
+            assertFalse(addCreep(game,creep1))
+            assertFalse(addCreep(game,creep2))
+            assertFalse(addCreep(game,creep3))
+            assertFalse(addCreep(game,creep4))
+            assertFalse(addCreep(game,creep5))
+            assertEquals(0,game.creeps.size)
+        }
+
+        @Test
+        fun `Spawn several creeps inside one space`(){
+            val creep1 = Creep(3.3,4.4)
+            val creep2 = Creep(3.3,4.4)
+            addCreep(game,creep1)
+            assertTrue(addCreep(game,creep1))
+            assertEquals(2,game.creeps.size)
+        }
+    }
+
+    @Nested
     inner class TestGetTowersAt {
         @Test
         fun `get towers at a valid location`() {
