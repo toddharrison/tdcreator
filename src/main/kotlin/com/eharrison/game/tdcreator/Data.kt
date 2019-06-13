@@ -18,10 +18,10 @@ data class Tower(
 )
 
 data class Creep(
-    val x: Double,
-    val y: Double,
-    val z: Double = 0.0
-    //val Health: Int = 10
+    var x: Double,
+    var y: Double,
+    var z: Double = 0.0
+    //val health: Int = 10
 )
 
 fun addTower(game: Game, tower: Tower): Boolean {
@@ -35,16 +35,6 @@ fun addTower(game: Game, tower: Tower): Boolean {
         ) {
             game.towers.add(tower)
         } else false
-    } else false
-}
-
-fun addCreep(game:Game, creep: Creep): Boolean {
-    val intX = creep.x.toInt()
-    val intY = creep.y.toInt()
-    val intZ = creep.z.toInt()
-    return if (getTowersAt(game, intX,intY,intZ).isEmpty() && intX in 0 until game.sizeX
-        && intY in 0 until game.sizeY && intZ in 0 until game.sizeZ) {
-        game.creeps.add(creep)
     } else false
 }
 
@@ -67,16 +57,42 @@ fun getTowersAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int
     }
 }
 
+fun addCreep(game: Game, creep: Creep): Boolean {
+    val intX = creep.x.toInt()
+    val intY = creep.y.toInt()
+    val intZ = creep.z.toInt()
+
+    return if (getTowersAt(game, intX,intY,intZ).isEmpty() && intX in 0 until game.sizeX
+        && intY in 0 until game.sizeY && intZ in 0 until game.sizeZ) {
+        game.creeps.add(creep)
+    } else false
+}
+
+fun getCreepsAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int = y1, z2: Int = z1): List<Creep> {
+    val minX = Math.min(x1, x2)
+    val maxX = Math.max(x1, x2) + 1
+    val minY = Math.min(y1, y2)
+    val maxY = Math.max(y1, y2) + 1
+    val minZ = Math.min(z1, z2)
+    val maxZ = Math.max(z1, z2) + 1
+
+    return game.creeps.filter {
+        it.x < maxX && it.x >= minX
+                && it.y < maxY && it.y >= minY
+                && it.z < maxZ && it.z >= minZ
+    }
+}
+
 fun render(game: Game): String {
     val sb = StringBuilder()
     for (z in 0 until game.sizeZ) {
         sb.append("Layer $z:\n")
         for (y in 0 until game.sizeY) {
             for (x in 0 until game.sizeX) {
-                if (getTowersAt(game, x, y, z).isEmpty()) {
-                    sb.append(" .")
-                } else {
-                    sb.append(" #")
+                when {
+                    getTowersAt(game, x, y, z).isNotEmpty() -> sb.append(" #")
+                    getCreepsAt(game, x, y, z).isNotEmpty() -> sb.append(" *")
+                    else -> sb.append(" .")
                 }
             }
             sb.append("\n")

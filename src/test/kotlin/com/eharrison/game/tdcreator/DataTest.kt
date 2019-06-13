@@ -146,6 +146,34 @@ class DataTest {
     }
 
     @Nested
+    inner class TestRemoveTower {
+        @Test
+        fun `remove tower not in game`() {
+            assertTrue(addTower(game, Tower(4,4)))
+
+            assertEquals(1, game.towers.size)
+
+            val tower = Tower(5,5)
+
+            assertFalse(removeTower(game, tower))
+
+            assertEquals(1, game.towers.size)
+        }
+
+        @Test
+        fun `remove tower in game`() {
+            assertTrue(addTower(game, Tower(4,4)))
+            assertTrue(addTower(game, Tower(5,5)))
+
+            assertEquals(2, game.towers.size)
+
+            assertTrue(removeTower(game, game.towers[0]))
+
+            assertEquals(1, game.towers.size)
+        }
+    }
+
+    @Nested
     inner class TestRender {
         @Test
         fun `render all layer`() {
