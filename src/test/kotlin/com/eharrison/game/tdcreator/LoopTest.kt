@@ -11,7 +11,7 @@ class LoopTest {
     @Test
     fun `run the game loop for 10 renderings`() {
         val dst = 1.0 / 60.0 // Integrate 60 times per second
-        val drt = 1.0 //1.0 / 30.0 // Render 30 times per second
+        val drt = 1.0 / 30.0 // Render 30 times per second
         val mit = 0.25 // Maximum integration time is 1/4 of a second
         val startingState = State() // Starting location
 
