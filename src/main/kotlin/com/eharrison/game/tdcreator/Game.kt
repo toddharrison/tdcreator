@@ -34,6 +34,8 @@ fun main() {
             currentInput.set(Input(paused = false, shutdown = true))
         }
     }
+
+    println(game)
 }
 
 data class Input(
@@ -62,12 +64,12 @@ private fun integrate(input: Input, state: Game, t: Double, dt: Double): Game {
             val path = aStar(start, end, ::getNeighbors, ::distance, blocked, euclidean)
             if (path.isNotEmpty()) {
                 when {
-                    creep.x < path[0].x + 0.5 -> creep.x = Math.min(path[0].x + 0.5, creep.x + (1 * dt))
-                    creep.x > path[0].x + 0.5 -> creep.x = Math.max(path[0].x + 0.5, creep.x - (1 * dt))
+                    creep.x < path[0].x + 0.5 -> creep.x = Math.min(path[0].x + 0.5, creep.x + dt)
+                    creep.x > path[0].x + 0.5 -> creep.x = Math.max(path[0].x + 0.5, creep.x - dt)
                 }
                 when {
-                    creep.y < path[0].y + 0.5 -> creep.y = Math.min(path[0].y + 0.5, creep.y + (1 * dt))
-                    creep.y > path[0].y + 0.5 -> creep.y = Math.max(path[0].y + 0.5, creep.y - (1 * dt))
+                    creep.y < path[0].y + 0.5 -> creep.y = Math.min(path[0].y + 0.5, creep.y + dt)
+                    creep.y > path[0].y + 0.5 -> creep.y = Math.max(path[0].y + 0.5, creep.y - dt)
                 }
 //            println("${creep.x} : ${creep.y} : ${creep.z}")
             }

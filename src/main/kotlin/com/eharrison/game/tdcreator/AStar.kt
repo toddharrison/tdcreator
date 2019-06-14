@@ -3,34 +3,34 @@ package com.eharrison.game.tdcreator
 import java.util.PriorityQueue
 import java.util.ArrayList
 
-typealias Neighbors<N> = (N) -> List<N>
-typealias Cost<N> = (N, N) -> Double
-typealias Exclude<N> = (N) -> Boolean
-typealias Heuristic<N> = (N, N) -> Double
+typealias Neighbors<Node> = (Node) -> List<Node>
+typealias Cost<Node> = (Node, Node) -> Double
+typealias Exclude<Node> = (Node) -> Boolean
+typealias Heuristic<Node> = (Node, Node) -> Double
 
-fun <N> aStar(
-    start: N,
-    goal: N,
-    neighbors: Neighbors<N>,
-    cost: Cost<N> = { _, _ -> 1.0 },
-    exclude: Exclude<N> = { _ -> false },
-    heuristic: Heuristic<N> = { _, _ -> 0.0 } // Dijkstra's algorithm, only for positive costs
-): List<N> {
-    val closedSet = mutableSetOf<N>() // The set of nodes already evaluated.
-    val cameFrom = mutableMapOf<N, N>() // The map of navigated nodes.
+fun <Node> aStar(
+    start: Node,
+    goal: Node,
+    neighbors: Neighbors<Node>,
+    cost: Cost<Node> = { _, _ -> 1.0 },
+    exclude: Exclude<Node> = { _ -> false },
+    heuristic: Heuristic<Node> = { _, _ -> 0.0 } // Dijkstra's algorithm, only for positive costs
+): List<Node> {
+    val closedSet = mutableSetOf<Node>() // The set of nodes already evaluated.
+    val cameFrom = mutableMapOf<Node, Node>() // The map of navigated nodes.
 
-    val gScore = mutableMapOf<N, Double>() // Cost from start along best known path.
+    val gScore = mutableMapOf<Node, Double>() // Cost from start along best known path.
     gScore[start] = 0.0
 
     // Estimated total cost from start to goal through y.
-    val fScore = mutableMapOf<N, Double>()
+    val fScore = mutableMapOf<Node, Double>()
     fScore[start] = heuristic(start, goal)
 
     // The set of tentative nodes to be evaluated, initially containing the start node
-    val openSet = PriorityQueue<N> {o1, o2 ->
+    val openSet = PriorityQueue<Node> {o1, o2 ->
         when {
-            (fScore[o1] ?: Double.MAX_VALUE) < (fScore[o2] ?: Double.MAX_VALUE) -> -1
-            (fScore[o2] ?: Double.MAX_VALUE) < (fScore[o1] ?: Double.MAX_VALUE) -> 1
+            fScore[o1] ?: Double.MAX_VALUE < fScore[o2] ?: Double.MAX_VALUE -> -1
+            fScore[o2] ?: Double.MAX_VALUE < fScore[o1] ?: Double.MAX_VALUE -> 1
             else -> 0
         }
     }
@@ -67,12 +67,12 @@ fun <N> aStar(
     return emptyList()
 }
 
-private fun <N> reconstructPath(
-    cameFrom: Map<N, N>,
-    current: N?
-): List<N> {
+private fun <Node> reconstructPath(
+    cameFrom: Map<Node, Node>,
+    current: Node?
+): List<Node> {
     var cur = current
-    val totalPath = ArrayList<N>()
+    val totalPath = ArrayList<Node>()
 
     while (cur != null) {
         val previous = cur
