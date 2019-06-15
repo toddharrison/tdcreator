@@ -16,14 +16,14 @@ fun main() {
     val mit = 0.25 // Maximum integration time is 1/4 of a second
     val startingState = game
 
-    addTower(game, Tower(4,4))
-    addTower(game, Tower(4,5))
-    addTower(game, Tower(5,4))
-    addTower(game, Tower(3,6))
+    addTower(game, Tower(Region(4,4)))
+    addTower(game, Tower(Region(4,5)))
+    addTower(game, Tower(Region(5,4)))
+    addTower(game, Tower(Region(3,6)))
 
-    addCreep(startingState, Creep(0.5,0.5))
-    addCreep(startingState, Creep(2.5,0.5))
-    addCreep(startingState, Creep(0.5,2.5))
+    addCreep(startingState, Creep(Point(0.5,0.5)))
+    addCreep(startingState, Creep(Point(2.5,0.5)))
+    addCreep(startingState, Creep(Point(0.5,2.5)))
 
     println(render(game))
 
