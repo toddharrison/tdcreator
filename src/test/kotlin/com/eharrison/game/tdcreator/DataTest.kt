@@ -51,6 +51,35 @@ class DataTest {
     }
 
     @Nested
+    inner class TestRemoveCreep {
+        @Test
+        fun `remove a creep`() {
+            val creep = Creep(4.2,6.3)
+            addCreep(game,creep)
+            removeCreep(game,creep)
+            assertEquals(0,game.creeps.size)
+        }
+    }
+
+    @Nested
+    inner class TestAddProjectile {
+       @Test
+       fun `add a projectile`() {
+           val projectile = Projectile(3.3,4.4)
+           assertTrue(addProjectile(game, projectile))
+           assertEquals(1,game.projectiles.size)
+       }
+
+       @Test
+       fun `Add a projectile on a tower`() {
+           addTower(game, Tower(3,4))
+           val projectile = Projectile(3.3,4.4)
+           assertTrue(addProjectile(game, projectile))
+           assertEquals(1,game.projectiles.size)
+       }
+    }
+
+    @Nested
     inner class TestGetTowersAt {
         @Test
         fun `get towers at a valid location`() {
@@ -73,6 +102,32 @@ class DataTest {
             assertEquals(2, towers.size)
             assertTrue(towers.contains(tower))
             assertTrue(towers.contains(tower2))
+        }
+    }
+
+    @Nested
+    inner class TestGetCreepsAt {
+        @Test
+        fun `get creeps at a valid location`() {
+            val creep = Creep(4.3,4.2)
+            addCreep(game, creep)
+
+            var creeps = getCreepsAt(game,4,4)
+            assertEquals(1, creeps.size)
+            assertTrue(creeps.contains(creep))
+
+            val creep2 = Creep(4.3,4.6,1.0)
+            addCreep(game, creep2)
+
+            creeps = getCreepsAt(game,4,4,0,4,4,1)
+            assertEquals(2, creeps.size)
+            assertTrue(creeps.contains(creep))
+            assertTrue(creeps.contains(creep2))
+
+            creeps = getCreepsAt(game,4,4,1,3,3,0)
+            assertEquals(2, creeps.size)
+            assertTrue(creeps.contains(creep))
+            assertTrue(creeps.contains(creep2))
         }
     }
 
