@@ -44,7 +44,7 @@ data class Vector(
     operator fun div(scalar: Double) = Vector(x / scalar, y / scalar, z / scalar)
 
     fun magnitude() = magnitudeSquared().pow(0.5)
-    fun magnitudeSquared() = (x.pow(2) + y.pow(2) + z.pow(2))
+    fun magnitudeSquared() = x.pow(2) + y.pow(2) + z.pow(2)
     fun toUnitVector(): Vector {
         return this / magnitude()
     }
