@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-class DataTest {
+class GameTest {
     val game = Game(10, 10,10)
 
     @Nested
