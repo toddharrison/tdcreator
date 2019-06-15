@@ -58,19 +58,23 @@ private fun integrate(input: Input, state: Game, t: Double, dt: Double): Game {
 
     val ns = measureNanoTime {
         for (creep in state.creeps) {
-            val start = Node(creep.x.minus(0.5).toInt(), creep.y.minus(0.5).toInt(), creep.z.toInt())
-            val end = Node(9, 9, creep.z.toInt())
+            val loc = creep.location
+            val start = Node(loc.x.minus(0.5).toInt(), loc.y.minus(0.5).toInt(), loc.z.toInt())
+            val end = Node(9, 9, loc.z.toInt())
 
             val path = aStar(start, end, ::getNeighbors, ::distance, blocked, euclidean)
             if (path.isNotEmpty()) {
+                var newX = loc.x
                 when {
-                    creep.x < path[0].x + 0.5 -> creep.x = Math.min(path[0].x + 0.5, creep.x + dt)
-                    creep.x > path[0].x + 0.5 -> creep.x = Math.max(path[0].x + 0.5, creep.x - dt)
+                    loc.x < path[0].x + 0.5 -> newX = Math.min(path[0].x + 0.5, loc.x + dt)
+                    loc.x > path[0].x + 0.5 -> newX = Math.max(path[0].x + 0.5, loc.x - dt)
                 }
+                var newY = loc.y
                 when {
-                    creep.y < path[0].y + 0.5 -> creep.y = Math.min(path[0].y + 0.5, creep.y + dt)
-                    creep.y > path[0].y + 0.5 -> creep.y = Math.max(path[0].y + 0.5, creep.y - dt)
+                    loc.y < path[0].y + 0.5 -> newY = Math.min(path[0].y + 0.5, loc.y + dt)
+                    loc.y > path[0].y + 0.5 -> newY = Math.max(path[0].y + 0.5, loc.y - dt)
                 }
+                creep.location = Point(newX, newY, loc.z)
 //            println("${creep.x} : ${creep.y} : ${creep.z}")
             }
         }
@@ -93,9 +97,9 @@ private fun getNeighbors(node: Node): List<Node> {
             val nodeX = node.x + x
             val nodeY = node.y + y
             if (
-                nodeX in 0 until game.sizeX
-                && nodeY in 0 until game.sizeY
-                && getTowersAt(game, nodeX, nodeY, node.z).isEmpty()
+                nodeX in 0..game.region.maxX
+                && nodeY in 0..game.region.maxY
+                && getTowersAt(game, Region(nodeX, nodeY, node.z)).isEmpty()
             ) {
                 val neighbor = Node(nodeX, nodeY, node.z)
                 neighbors.add(neighbor)

@@ -86,19 +86,19 @@ class GameTest {
             val tower = Tower(4,4)
             addTower(game, tower)
 
-            var towers = getTowersAt(game,4,4)
+            var towers = getTowersAt(game, Region(4,4))
             assertEquals(1, towers.size)
             assertTrue(towers.contains(tower))
 
             val tower2 = Tower(4,4,1)
             addTower(game, tower2)
 
-            towers = getTowersAt(game,4,4,0,4,4,1)
+            towers = getTowersAt(game, Region(4,4,0,4,4,1))
             assertEquals(2, towers.size)
             assertTrue(towers.contains(tower))
             assertTrue(towers.contains(tower2))
 
-            towers = getTowersAt(game,4,4,1,3,3,0)
+            towers = getTowersAt(game, Region(4,4,1,3,3,0))
             assertEquals(2, towers.size)
             assertTrue(towers.contains(tower))
             assertTrue(towers.contains(tower2))
@@ -112,19 +112,19 @@ class GameTest {
             val creep = Creep(4.3,4.2)
             addCreep(game, creep)
 
-            var creeps = getCreepsAt(game,4,4)
+            var creeps = getCreepsAt(game, Region(4,4))
             assertEquals(1, creeps.size)
             assertTrue(creeps.contains(creep))
 
             val creep2 = Creep(4.3,4.6,1.0)
             addCreep(game, creep2)
 
-            creeps = getCreepsAt(game,4,4,0,4,4,1)
+            creeps = getCreepsAt(game, Region(4,4,0,4,4,1))
             assertEquals(2, creeps.size)
             assertTrue(creeps.contains(creep))
             assertTrue(creeps.contains(creep2))
 
-            creeps = getCreepsAt(game,4,4,1,3,3,0)
+            creeps = getCreepsAt(game, Region(4,4,1,3,3,0))
             assertEquals(2, creeps.size)
             assertTrue(creeps.contains(creep))
             assertTrue(creeps.contains(creep2))
