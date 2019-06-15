@@ -30,7 +30,7 @@ fun main() {
     var count = 0
     loop(running::get, paused::get, dst, drt, mit, startingState, ::input, ::integrate, ::interpolate) {
         println(render(game))
-        if (count++ == 11) {
+        if (count++ == 14) {
             currentInput.set(Input(paused = false, shutdown = true))
         }
     }
@@ -64,18 +64,9 @@ private fun integrate(input: Input, state: Game, t: Double, dt: Double): Game {
 
             val path = aStar(start, end, ::getNeighbors, ::distance, blocked, euclidean)
             if (path.isNotEmpty()) {
-                var newX = loc.x
-                when {
-                    loc.x < path[0].x + 0.5 -> newX = Math.min(path[0].x + 0.5, loc.x + dt)
-                    loc.x > path[0].x + 0.5 -> newX = Math.max(path[0].x + 0.5, loc.x - dt)
-                }
-                var newY = loc.y
-                when {
-                    loc.y < path[0].y + 0.5 -> newY = Math.min(path[0].y + 0.5, loc.y + dt)
-                    loc.y > path[0].y + 0.5 -> newY = Math.max(path[0].y + 0.5, loc.y - dt)
-                }
-                creep.location = Point(newX, newY, loc.z)
-//            println("${creep.x} : ${creep.y} : ${creep.z}")
+                val vector = Point(path[0].x + 0.5, path[0].y + 0.5, path[0].z.toDouble()) - loc
+                val d = vector.toUnitVector() * dt
+                creep.location = loc + d
             }
         }
     }

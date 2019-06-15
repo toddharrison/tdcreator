@@ -57,6 +57,7 @@ data class Point(
 ) {
     operator fun plus(v: Vector) = Point(x + v.x, y + v.y, z + v.z)
     operator fun minus(v: Vector) = Point(x - v.x, y - v.y, z - v.z)
+    operator fun minus(p: Point) = Vector(x - p.x, y - p.y, z - p.z)
 
     fun distance(point: Point) = distanceSquared(point).pow(0.5)
     fun distanceSquared(point: Point) = (point.x - x).pow(2) + (point.y - y).pow(2) + (point.z - z).pow(2)
