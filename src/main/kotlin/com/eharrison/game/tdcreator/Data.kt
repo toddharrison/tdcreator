@@ -74,9 +74,9 @@ fun addProjectile(game: Game, projectile: Projectile): Boolean {
     val x = projectile.x.toInt()
     val y = projectile.x.toInt()
     val z = projectile.x.toInt()
-    val maxX = (projectile.sizeX).toInt()
-    val maxY = (projectile.sizeY).toInt()
-    val maxZ = (projectile.sizeZ).toInt()
+    val maxX = projectile.sizeX.toInt()
+    val maxY = projectile.sizeY.toInt()
+    val maxZ = projectile.sizeZ.toInt()
     return if ( // Check if projectile is within game boundaries
         x in 0..game.sizeX - maxX
         && y in 0..game.sizeY - maxY
