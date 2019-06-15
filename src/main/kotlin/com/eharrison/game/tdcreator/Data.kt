@@ -19,13 +19,17 @@ data class Tower(
 )
 
 data class Creep(
-    val x: Double,
-    val y: Double,
-    val z: Double = 0.0,
-    val sizeX: Double = 0.4,
-    val sizeY: Double = 0.4,
-    val sizeZ: Double = 0.4
-    //val Health: Int = 10
+//    val x: Double,
+//    val y: Double,
+//    val z: Double = 0.0,
+//    val sizeX: Double = 0.4,
+//    val sizeY: Double = 0.4,
+//    val sizeZ: Double = 0.4
+//    //val Health: Int = 10
+    var x: Double,
+    var y: Double,
+    var z: Double = 0.0
+    //val health: Int = 10
 )
 
 data class Projectile(
@@ -105,18 +109,33 @@ fun getTowersAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int
     }
 }
 
+//fun getCreepsAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int = y1, z2: Int = z1): List<Creep> {
+//    val minX = Math.min(x1, x2)
+//    val maxX = Math.max(x1, x2)
+//    val minY = Math.min(y1, y2)
+//    val maxY = Math.max(y1, y2)
+//    val minZ = Math.min(z1, z2)
+//    val maxZ = Math.max(z1, z2)
+//
+//    return game.creeps.filter {
+//        it.x.toInt() <= maxX && (it.x + it.sizeX).toInt() >= minX
+//                && it.y.toInt() <= maxY && (it.y + it.sizeY).toInt() >= minY
+//                && it.z.toInt() <= maxZ && (it.z + it.sizeZ).toInt() >= minZ
+//    }
+//}
+
 fun getCreepsAt(game: Game, x1: Int, y1: Int, z1: Int = 0, x2: Int = x1, y2: Int = y1, z2: Int = z1): List<Creep> {
     val minX = Math.min(x1, x2)
-    val maxX = Math.max(x1, x2)
+    val maxX = Math.max(x1, x2) + 1
     val minY = Math.min(y1, y2)
-    val maxY = Math.max(y1, y2)
+    val maxY = Math.max(y1, y2) + 1
     val minZ = Math.min(z1, z2)
-    val maxZ = Math.max(z1, z2)
+    val maxZ = Math.max(z1, z2) + 1
 
     return game.creeps.filter {
-        it.x.toInt() <= maxX && (it.x + it.sizeX).toInt() >= minX
-                && it.y.toInt() <= maxY && (it.y + it.sizeY).toInt() >= minY
-                && it.z.toInt() <= maxZ && (it.z + it.sizeZ).toInt() >= minZ
+        it.x < maxX && it.x >= minX
+                && it.y < maxY && it.y >= minY
+                && it.z < maxZ && it.z >= minZ
     }
 }
 
@@ -126,10 +145,10 @@ fun render(game: Game): String {
         sb.append("Layer $z:\n")
         for (y in 0 until game.sizeY) {
             for (x in 0 until game.sizeX) {
-                if (getTowersAt(game, x, y, z).isEmpty()) {
-                    sb.append(" .")
-                } else {
-                    sb.append(" #")
+                when {
+                    getTowersAt(game, x, y, z).isNotEmpty() -> sb.append(" #")
+                    getCreepsAt(game, x, y, z).isNotEmpty() -> sb.append(" *")
+                    else -> sb.append(" .")
                 }
             }
             sb.append("\n")

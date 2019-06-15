@@ -5,7 +5,8 @@ import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 
 private val running = AtomicBoolean(true)
-private val currentInput = AtomicReference<Input>(Input(false))
+private val paused = AtomicBoolean(false)
+private val currentInput = AtomicReference<Input>(Input(paused = false, shutdown = false))
 
 class LoopTest {
     @Test
@@ -13,19 +14,20 @@ class LoopTest {
         val dst = 1.0 / 60.0 // Integrate 60 times per second
         val drt = 1.0 / 30.0 // Render 30 times per second
         val mit = 0.25 // Maximum integration time is 1/4 of a second
-        val startingState = State() // Starting location
+        val startingState = State(0.0,0.0) // Starting location
 
         var count = 0
-        loop(running::get, dst, drt, mit, startingState, ::input, ::integrate, ::interpolate) {
+        loop(running::get, paused::get, dst, drt, mit, startingState, ::input, ::integrate, ::interpolate) {
             // This is what is run 30 times a second to render the results of the new State
             count++
             println("$count: $it")
-            if (count == 10) currentInput.set(Input(true))
+            if (count == 10) currentInput.set(Input(paused = false, shutdown = true))
         }
     }
 }
 
 data class Input(
+    val paused: Boolean,
     val shutdown: Boolean
 )
 
