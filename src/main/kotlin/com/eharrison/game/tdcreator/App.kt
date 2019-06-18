@@ -3,6 +3,46 @@ package com.eharrison.game.tdcreator
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.measureNanoTime
+import tornadofx.*
+
+fun main(args: Array<String>) {
+    launch<MyApp>(args)
+}
+
+class MyApp: App(MasterView::class)
+
+class MasterView: View() {
+    override val root = borderpane {
+        top<TopView>()
+        center<MyView>()
+        bottom<BottomView>()
+    }
+}
+
+class TopView: View() {
+    override val root = label("Top View")
+}
+
+class BottomView: View() {
+    override val root = label("Bottom View")
+}
+
+class MyView: View() {
+    override val root = vbox {
+        button("Press me")
+        label("Waiting")
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 private val running = AtomicBoolean(true)
 private val paused = AtomicBoolean(false)
