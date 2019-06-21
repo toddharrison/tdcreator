@@ -1,15 +1,42 @@
 package com.eharrison.game.tdcreator
 
+import javafx.scene.canvas.Canvas
+import javafx.scene.canvas.GraphicsContext
+import javafx.scene.paint.Color
+import javafx.stage.Stage
 import java.util.concurrent.atomic.AtomicBoolean
 import java.util.concurrent.atomic.AtomicReference
 import kotlin.system.measureNanoTime
 import tornadofx.*
+import tornadofx.FX
+
+
 
 fun main(args: Array<String>) {
     launch<MyApp>(args)
 }
 
-class MyApp: App(MasterView::class)
+class MyApp: App(MasterView::class) {
+    init {
+        importStylesheet(MyStyle::class)
+    }
+
+    override fun start(stage: Stage) {
+        stage.minHeight = 400.0
+        stage.minWidth = 400.0
+        super.start(stage)
+        println("Started")
+
+        val controller = FX.find(MyController::class.java)
+        println(controller.c)
+
+        controller.c.fill = Color.YELLOW
+        controller.c.fillRect(10.0,10.0,100.0,100.0)
+    }
+}
+
+class MyStyle: Stylesheet() {
+}
 
 class MasterView: View() {
     override val root = borderpane {
@@ -28,12 +55,37 @@ class BottomView: View() {
 }
 
 class MyView: View() {
-    override val root = vbox {
-        button("Press me")
-        label("Waiting")
+    val controller: MyController by inject()
+    var c: Canvas by singleAssign()
+
+    override val root = stackpane {
+        style {
+            backgroundColor += Color.RED
+        }
+//        minHeight = 400.0
+//        minWidth = 400.0
+        controller.c = canvas {
+            height = 400.0
+            width = 400.0
+            scaleX = 1.0
+            scaleY = 1.0
+            scaleZ = 1.0
+        }.graphicsContext2D
+        group {
+            rectangle {
+                fill = Color.BLUE
+                width = 300.0
+                height = 150.0
+                arcWidth = 20.0
+                arcHeight = 20.0
+            }
+        }
     }
 }
 
+class MyController: Controller() {
+    var c: GraphicsContext by singleAssign()
+}
 
 
 
