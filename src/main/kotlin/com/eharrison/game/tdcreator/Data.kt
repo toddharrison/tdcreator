@@ -5,7 +5,7 @@ data class Tower(
 )
 
 data class Creep(
-    var location: Point
+    var location: PointProperty
 )
 
 data class Projectile(

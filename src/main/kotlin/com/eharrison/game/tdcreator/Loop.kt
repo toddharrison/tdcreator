@@ -1,5 +1,7 @@
 package com.eharrison.game.tdcreator
 
+import java.lang.Double.min
+
 // https://gafferongames.com/post/fix_your_timestep/
 
 typealias LoopCheck = () -> Boolean
@@ -35,7 +37,7 @@ fun <In, State> loop(
     while (running()) {
         if (!paused()) {
             val newTime = System.nanoTime()
-            val frameTime = Math.min((newTime - currentTime).times(1.0e-9), mit)
+            val frameTime = min((newTime - currentTime).times(1.0e-9), mit)
             currentTime = newTime
 
             stateAccumulator += frameTime

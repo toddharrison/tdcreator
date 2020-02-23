@@ -11,7 +11,7 @@ class GameTest {
     inner class TestAddCreep {
         @Test
         fun `Try to spawn a creep on a tower`() {
-            val creep = Creep(Point(1.5,1.2))
+            val creep = Creep(PointProperty(1.5,1.2))
             val tower = Tower(Region(1,1))
             addTower(game, tower)
             assertFalse(addCreep(game, creep))
@@ -20,18 +20,18 @@ class GameTest {
 
         @Test
         fun `Spawn a creep normally`() {
-            val creep = Creep(Point(4.3,2.9))
+            val creep = Creep(PointProperty(4.3,2.9))
             assertTrue(addCreep(game, creep))
             assertEquals(1, game.creeps.size)
         }
 
         @Test
         fun `Try to Spawn a creep outside of the map`(){
-            val creep1 = Creep(Point(-2.3,3.4))
-            val creep2 = Creep(Point(1.3,-3.4))
-            val creep3 = Creep(Point(11.3,3.4))
-            val creep4 = Creep(Point(1.3,13.4))
-            val creep5 = Creep(Point(1.3,3.4,13.3))
+            val creep1 = Creep(PointProperty(-2.3,3.4))
+            val creep2 = Creep(PointProperty(1.3,-3.4))
+            val creep3 = Creep(PointProperty(11.3,3.4))
+            val creep4 = Creep(PointProperty(1.3,13.4))
+            val creep5 = Creep(PointProperty(1.3,3.4,13.3))
             assertFalse(addCreep(game, creep1))
             assertFalse(addCreep(game, creep2))
             assertFalse(addCreep(game, creep3))
@@ -42,8 +42,8 @@ class GameTest {
 
         @Test
         fun `Spawn several creeps inside one space`(){
-            val creep1 = Creep(Point(3.3,4.4))
-            val creep2 = Creep(Point(3.3,4.4))
+            val creep1 = Creep(PointProperty(3.3,4.4))
+            val creep2 = Creep(PointProperty(3.3,4.4))
             addCreep(game, creep1)
             assertTrue(addCreep(game, creep1))
             assertEquals(2, game.creeps.size)
@@ -54,7 +54,7 @@ class GameTest {
     inner class TestRemoveCreep {
         @Test
         fun `remove a creep`() {
-            val creep = Creep(Point(4.2,6.3))
+            val creep = Creep(PointProperty(4.2,6.3))
             addCreep(game, creep)
             removeCreep(game, creep)
             assertEquals(0, game.creeps.size)
@@ -108,14 +108,14 @@ class GameTest {
     inner class TestGetCreepsAt {
         @Test
         fun `get creeps at a valid location`() {
-            val creep = Creep(Point(4.3,4.2))
+            val creep = Creep(PointProperty(4.3,4.2))
             addCreep(game, creep)
 
             var creeps = getCreepsAt(game, Region(4,4))
             assertEquals(1, creeps.size)
             assertTrue(creeps.contains(creep))
 
-            val creep2 = Creep(Point(4.3,4.6,1.0))
+            val creep2 = Creep(PointProperty(4.3,4.6,1.0))
             addCreep(game, creep2)
 
             creeps = getCreepsAt(game, Region(4,4,0,7,7,1))
